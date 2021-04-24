@@ -299,7 +299,7 @@ Widget AyarlarPage() {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
-              "TESTSETESTSET\nBu uygulama Dr. Öğretim Üyesi Ahmet Cevahir ÇINAR tarafından yürütülen 3301456 kodlu MOBİL PROGRAMLAMA dersi kapsamında 193301073 numaralı Emir ANAR tarafından 30 Nisan 2021 günü yapılmıştır.",
+              "\nBu uygulama Dr. Öğretim Üyesi Ahmet Cevahir ÇINAR tarafından yürütülen 3301456 kodlu MOBİL PROGRAMLAMA dersi kapsamında 193301073 numaralı Emir ANAR tarafından 30 Nisan 2021 günü yapılmıştır.",
             ),
           ],
         ),
