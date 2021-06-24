@@ -1,6 +1,15 @@
 import 'dart:ui';
+import 'package:f1track/register.dart';
 import 'package:flutter/material.dart';
-import 'package:sweetalert/sweetalert.dart';
+import 'package:f1track/views/pilots_view.dart';
+import 'package:f1track/views/teams_view.dart';
+import 'package:f1track/views/schedule_view.dart';
+import 'package:f1track/views/news_view.dart';
+import 'package:f1track/login.dart';
+import 'package:f1track/hakkinda.dart';
+import 'package:f1track/charts.dart';
+import 'package:animations/animations.dart';
+import 'package:flutter/scheduler.dart';
 
 void main() {
   runApp(MyApp());
@@ -35,7 +44,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({required this.title});
   final String title;
 
   @override
@@ -50,16 +59,11 @@ class _MyHomePageState extends State<MyHomePage> {
         centerTitle: true,
         title: Text(widget.title),
       ),
-      body: GirisPage(), // sayfaGoster(seciliSayfa),
+      body: LoginPage(), // sayfaGoster(seciliSayfa),
 
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
-}
-
-class GirisPage extends StatefulWidget {
-  @override
-  _GirisPageState createState() => _GirisPageState();
 }
 
 class TumSayfalar extends StatefulWidget {
@@ -69,18 +73,23 @@ class TumSayfalar extends StatefulWidget {
 
 class _TumSayfalarState extends State<TumSayfalar> {
   Widget sayfaGoster(int SayfaNo) {
-    if (SayfaNo == -1) return GirisPage();
+    if (SayfaNo == -2) return RegisterPage();
+    if (SayfaNo == -1) return LoginPage();
     if (SayfaNo == 0) return Anasayfa();
-    if (SayfaNo == 1) return TakvimPage();
-    if (SayfaNo == 2) return PilotlarPage();
-    if (SayfaNo == 3) return TakimlarPage();
-    if (SayfaNo == 4) return AyarlarPage();
+    if (SayfaNo == 1) return SchedulesWidget();
+    if (SayfaNo == 2) return DriversWidget();
+    if (SayfaNo == 3) return TeamsWidget();
+    if (SayfaNo == 4) return Charts();
+    if (SayfaNo == 5) return Hakkinda();
+
+    return LoginPage();
   }
 
   void sayfaDegistir(int SayfaNo) {
     setState(() {
+      timeDilation = 5;
       seciliSayfa = SayfaNo;
-      print("sayfa no degisti");
+      // print("sayfa no degisti");
     });
   }
 
@@ -91,7 +100,16 @@ class _TumSayfalarState extends State<TumSayfalar> {
         centerTitle: true,
         title: Text("F1Track"),
       ),
-      body: sayfaGoster(seciliSayfa),
+      body: PageTransitionSwitcher(
+        transitionBuilder: (child, primaryAnimation, secondaryAnimation) {
+          return FadeThroughTransition(
+            animation: primaryAnimation,
+            secondaryAnimation: secondaryAnimation,
+            child: child,
+          );
+        },
+        child: sayfaGoster(seciliSayfa),
+      ),
 
       bottomNavigationBar: (seciliSayfa >= 0)
           ? Container(
@@ -134,6 +152,14 @@ class _TumSayfalarState extends State<TumSayfalar> {
                     ),
                   ),
                   BottomNavigationBarItem(
+                    icon: Icon(Icons.graphic_eq),
+                    title: Text(
+                      'Grafik',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                  ),
+                  BottomNavigationBarItem(
                     icon: Icon(Icons.info),
                     title: Text(
                       'Hakkında',
@@ -150,362 +176,9 @@ class _TumSayfalarState extends State<TumSayfalar> {
   }
 }
 
-final isimController = TextEditingController();
-
-class _GirisPageState extends State<GirisPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 300, 15, 15),
-      child: Center(
-        child: Container(
-          child: Column(
-            children: [
-              Text(
-                "F1Track",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
-              ),
-              Text(
-                "Giriş",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-              TextFormField(
-                controller: isimController,
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Adınızı girin',
-                  helperMaxLines: 1,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20)),
-                  label: Text('Giriş Yap'),
-                  icon: Icon(Icons.login),
-                  onPressed: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TumSayfalar()),
-                    ),
-                    SweetAlert.show(context,
-                        style: SweetAlertStyle.success,
-                        title: "Giriş Başarılı",
-                        subtitle: "Hoşgeldin " + isimController.text),
-                    SweetAlertOptions(
-                      confirmButtonText: "HB",
-                      confirmButtonColor: Colors.red,
-                    )
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+final emailController = TextEditingController();
+final sifreController = TextEditingController();
 
 Widget Anasayfa() {
-  return ListView.builder(
-    itemCount: 1,
-    itemBuilder: (context, index) {
-      return Column(
-        children: [
-          for (var i = 0; i < 10; i++)
-            Container(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-              height: 150,
-              width: double.maxFinite,
-              child: HaberWidget(),
-            ),
-        ],
-      );
-    },
-  );
-}
-
-Widget TakvimPage() {
-  return ListView.builder(
-    itemCount: 1,
-    itemBuilder: (context, index) {
-      return Column(
-        children: [
-          for (var i = 0; i < 10; i++)
-            Container(
-              padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-              height: 150,
-              width: double.maxFinite,
-              child: TakvimYarisWidget(),
-            ),
-        ],
-      );
-    },
-  );
-}
-
-Widget PilotlarPage() {
-  return Center(
-    child: ListView.builder(
-      itemCount: 1,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            for (var i = 0; i < 10; i++)
-              Container(
-                padding: EdgeInsets.fromLTRB(75, 10, 75, 0),
-                height: 250,
-                width: double.maxFinite,
-                child: PilotWidget(),
-              ),
-          ],
-        );
-      },
-    ),
-  );
-}
-
-Widget TakimlarPage() {
-  return Center(
-    child: ListView.builder(
-      itemCount: 1,
-      itemBuilder: (context, index) {
-        return Column(
-          children: [
-            for (var i = 0; i < 10; i++)
-              Container(
-                padding: EdgeInsets.fromLTRB(75, 10, 75, 0),
-                height: 250,
-                width: double.maxFinite,
-                child: TakimWidget(),
-              ),
-          ],
-        );
-      },
-    ),
-  );
-}
-
-Widget AyarlarPage() {
-  return Padding(
-    padding: const EdgeInsets.all(15),
-    child: Center(
-      child: Container(
-        child: Column(
-          children: [
-            Text(
-              "Hakkında",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              "\nBu uygulama Dr. Öğretim Üyesi Ahmet Cevahir ÇINAR tarafından yürütülen 3301456 kodlu MOBİL PROGRAMLAMA dersi kapsamında 193301073 numaralı Emir ANAR tarafından 30 Nisan 2021 günü yapılmıştır.",
-            ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-
-Widget HaberWidget() {
-  return Card(
-    elevation: 5,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          flex: 7,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 25, top: 25),
-                      child: Text(
-                        "Haber Başlığı",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    child: Container(
-                      padding:
-                          const EdgeInsets.only(left: 25, top: 10, right: 10),
-                      child: Text(
-                        "Haber açıklaması lorem ipsum dolor sit amet, lorem ipsum dolor sit amet, lorem ipsum dolor sit amet, lorem ipsum dolor sit amet, lorem ipsum dolor sit amet",
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Container(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 15),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image(
-                  alignment: Alignment.centerRight,
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                      'https://cdn-1.motorsport.com/images/amp/63v5Gg7Y/s500/formula-1-emilia-romagna-gp-20-2.jpg'),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget TakvimYarisWidget() {
-  return Card(
-    elevation: 5,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          flex: 7,
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 25, top: 25),
-                      child: Text(
-                        "30-02 NİSAN-MAYIS",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    child: Container(
-                      padding:
-                          const EdgeInsets.only(left: 25, top: 10, right: 10),
-                      child: Text(
-                        "Portekiz - Formula 1 Heineken Grande Prémio De Portugal 2021",
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Container(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 15),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image(
-                  alignment: Alignment.centerRight,
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxb5Ycvej-WZ1fy2KYNMio3UCjRjax7nWN-Q&usqp=CAU'),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget PilotWidget() {
-  return Container(
-    height: 900,
-    child: Card(
-      elevation: 5,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image(
-                  alignment: Alignment.center,
-                  //  width: 250,
-                  height: 400,
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                      'https://cdn-9.motorsport.com/images/mgl/6xEDbp10/s8/lewis-hamilton-mercedes-1.jpg'),
-                ),
-              ),
-            ),
-          ),
-          Text(
-            "Lewis Hamilton",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Text(
-              "Mercedes-AMG Petronas Formula One Team",
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-Widget TakimWidget() {
-  return Container(
-    height: 900,
-    child: Card(
-      elevation: 5,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image(
-                  alignment: Alignment.center,
-                  //  width: 250,
-                  height: 400,
-                  fit: BoxFit.cover,
-                  image: NetworkImage(
-                      'https://upload.wikimedia.org/wikipedia/commons/f/fa/Mercedes-Benz_AMG_Petronas_Formula_One_Team_Logo_Wheelsology.JPG'),
-                ),
-              ),
-            ),
-          ),
-          Text(
-            "Mercedes-AMG Petronas Formula One Team",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 15),
-            child: Text(
-              "25 Puan",
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
+  return NewsWidget();
 }

@@ -1,16 +1,14 @@
 import 'package:f1track/main.dart';
-import 'package:f1track/register.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:sweetalert/sweetalert.dart';
 import 'package:f1track/services/auth/auth_methods.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisterPageState createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 35),
               ),
               Text(
-                "Giriş",
+                "Kayıt",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
               TextFormField(
@@ -48,10 +46,10 @@ class _LoginPageState extends State<LoginPage> {
                 padding: const EdgeInsets.only(top: 30),
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(padding: EdgeInsets.all(20)),
-                  label: Text('Giriş Yap'),
-                  icon: Icon(Icons.login),
+                  label: Text('Kayıt Ol'),
+                  icon: Icon(Icons.how_to_reg_rounded),
                   onPressed: () async {
-                    var basarili = await signIn(
+                    var basarili = await register(
                         emailController.text, sifreController.text);
                     if (basarili) {
                       seciliSayfa = 0;
@@ -61,38 +59,17 @@ class _LoginPageState extends State<LoginPage> {
                       );
                       SweetAlert.show(context,
                           style: SweetAlertStyle.success,
-                          title: "Giriş Başarılı",
+                          title: "Kayıt Başarılı",
                           subtitle: "Hoşgeldin " + emailController.text);
                     } else {
                       SweetAlert.show(context,
                           style: SweetAlertStyle.error,
-                          title: "Giriş Başarısız",
-                          subtitle: "E-Posta veya şifre hatalı.");
+                          title: "Kayıt Başarısız",
+                          subtitle: "Bu E-posta kullanımda veya şifre zayıf.");
                     }
                   },
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Kayıt Ol',
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        seciliSayfa = -2;
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => TumSayfalar()),
-                        );
-                      },
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFFFF1801),
-                        fontSize: 16),
-                  ),
-                ),
-              )
             ],
           ),
         ),

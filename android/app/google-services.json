@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "621190768219",
+    "project_id": "f1track-54f75",
+    "storage_bucket": "f1track-54f75.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621190768219:android:8eeadcb9cd72c3a033017e",
+        "android_client_info": {
+          "package_name": "com.example.f1track"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "621190768219-gsbq430ak6ef448bc7qe7rrhdggokqs9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgkp_zSFZ0E1-8dHZfhDlKMcXSffzrmvk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "621190768219-gsbq430ak6ef448bc7qe7rrhdggokqs9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
