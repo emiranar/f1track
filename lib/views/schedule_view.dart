@@ -52,8 +52,8 @@ class _SchedulesWidgetState extends State<SchedulesWidget> {
   //Schedule(this.raceName, this.circuitId, this.raceDate);
 
   void getSchedulesList() async {
-    final response =
-        await http.get(Uri.parse('http://ergast.com/api/f1/current.json'));
+    final response = await http.get(Uri.parse(
+        'https://cors-anywhere.herokuapp.com/http://ergast.com/api/f1/current.json'));
 
     setState(() {
       if (response.statusCode == 200) {

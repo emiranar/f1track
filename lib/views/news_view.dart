@@ -55,7 +55,7 @@ class _NewsWidgetState extends State<NewsWidget> {
     final response = await http.get(Uri.parse(
         // 'https://newsapi.org/v2/everything?q=formula%1&language=tr&sortBy=popularity&apiKey=9bd7ad3f380e49daa11b772cc0a4771e'
         //'https://newsapi.org/v2/everything?qInTitle=formula&language=tr&sortBy=popularity&apiKey=9bd7ad3f380e49daa11b772cc0a4771e'
-        'https://newsapi.org/v2/everything?qInTitle=formula%20OR%20f1&language=tr&apiKey=9bd7ad3f380e49daa11b772cc0a4771e'));
+        'https://cors-anywhere.herokuapp.com/http://newsapi.org/v2/everything?qInTitle=formula%20OR%20f1&language=tr&apiKey=9bd7ad3f380e49daa11b772cc0a4771e'));
 
     setState(() {
       if (response.statusCode == 200) {
